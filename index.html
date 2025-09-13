@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catch the Fish 🐟</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0077b6">
+</head>
+<body>
+  <h1>🎣 Atrapa el Pez</h1>
+  <p>Haz clic en los peces antes de que desaparezcan. ¡Tienes 30 segundos!</p>
+  <div id="game-area"></div>
+  <p>Puntaje: <span id="score">0</span></p>
+  <p>Tiempo: <span id="time">30</span>s</p>
+
+  <script src="script.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js")
+        .then(() => console.log("✅ Service Worker registrado"))
+        .catch(err => console.error("SW fallo:", err));
+    }
+  </script>
+</body>
+</html>

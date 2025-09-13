@@ -4,9 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catch the Fish 🐟</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Manifest PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#0077b6">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #caf0f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #0077b6;
+    }
+    #game-area {
+      width: 90%;
+      height: 400px;
+      margin: 20px auto;
+      background: #90e0ef;
+      border: 3px solid #0077b6;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+    .fish {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .fish:hover {
+      transform: scale(1.2);
+    }
+  </style>
 </head>
 <body>
   <h1>🎣 Atrapa el Pez</h1>
@@ -15,8 +49,50 @@
   <p>Puntaje: <span id="score">0</span></p>
   <p>Tiempo: <span id="time">30</span>s</p>
 
-  <script src="script.js"></script>
   <script>
+    let score = 0;
+    let timeLeft = 30;
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("time");
+    const gameArea = document.getElementById("game-area");
+
+    // Crear peces aleatoriamente
+    function spawnFish() {
+      if (timeLeft <= 0) return;
+
+      const fish = document.createElement("img");
+      fish.src = "https://upload.wikimedia.org/wikipedia/commons/0/0b/Goldfish3.jpg"; 
+      fish.classList.add("fish");
+      fish.style.top = Math.random() * (gameArea.clientHeight - 50) + "px";
+      fish.style.left = Math.random() * (gameArea.clientWidth - 50) + "px";
+
+      fish.addEventListener("click", () => {
+        score++;
+        scoreEl.textContent = score;
+        fish.remove();
+      });
+
+      gameArea.appendChild(fish);
+
+      setTimeout(() => fish.remove(), 2000);
+    }
+
+    // Temporizador
+    function countdown() {
+      if (timeLeft > 0) {
+        timeLeft--;
+        timeEl.textContent = timeLeft;
+        setTimeout(countdown, 1000);
+      } else {
+        alert("⏰ Fin del juego! Puntaje final: " + score);
+      }
+    }
+
+    // Iniciar juego
+    setInterval(spawnFish, 1000);
+    countdown();
+
+    // Registrar Service Worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js")
         .then(() => console.log("✅ Service Worker registrado"))
